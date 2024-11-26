@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "linking-prediction"
+version = "0.1.0"
+description = ""
+authors = ["Shingo Watanabe <60470162+Last-Vega@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+torch-geometric = "^2.6.1"
+torch = "^2.5.1"
+plotly = "^5.24.1"
+pandas = "^2.2.3"
+seaborn = "^0.13.2"
+matplotlib = "^3.9.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
