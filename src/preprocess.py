@@ -7,6 +7,7 @@ import networkx as nx
 from torch_geometric.utils import to_networkx
 import matplotlib.pyplot as plt
 import scipy as sp
+from config import prices
 
 # データの作成
 def create_synthetic_dataset(num_users, num_items, user_feature_dim, item_feature_dim, feature_dim=5):
@@ -15,7 +16,10 @@ def create_synthetic_dataset(num_users, num_items, user_feature_dim, item_featur
 
     # アイテムの価格 (アイテムの特徴量．4000〜20000の間でランダムに価格を設定)
     not_purchase = torch.zeros(1, item_feature_dim)
-    item_features = torch.cat([not_purchase, torch.randint(4000, 20000, (num_items-1, item_feature_dim)).float()])
+    # item_features = torch.cat([not_purchase, torch.randint(4000, 20000, (num_items-1, item_feature_dim)).float()])
+    item_features = torch.cat([not_purchase, torch.tensor(prices).view(-1, 1).float()])
+    print(item_features)
+
 
     # ユーザとアイテムの2部グラフを作成する
     # ユーザとアイテムの間にエッジを張る（ユーザがアイテムをある価格で購入すればエッジが貼られる）

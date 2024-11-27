@@ -102,7 +102,9 @@ print(f'Test AUC: {test_auc:.4f}, Test AP: {test_ap:.4f}')
 
 # userがitemを購入するかどうかの確率だけが気になるので，隣接行列のuser×itemの部分だけを取り出す
 print(adj_pred.shape)
-print(adj_pred[1])
+# print(adj_pred[1])
 adj_pred = adj_pred[:num_users, num_users:]
 print(adj_pred.shape)
-print(adj_pred[1])
+# print(adj_pred[1])
+
+print(adj_pred)
