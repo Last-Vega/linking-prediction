@@ -6,14 +6,14 @@ from torch_geometric.data import Data
 import networkx as nx
 from torch_geometric.utils import to_networkx
 import matplotlib.pyplot as plt
-
+import scipy as sp
 
 # ユーザとアイテムの2部グラフを作成する
 # ユーザは行動の特徴量を，アイテムは価格の特徴量を持つ
 
 # ユーザ数
-num_users = 5
-user_feature_dim = 20
+num_users = 1000
+user_feature_dim = 50
 # アイテム数
 num_items = 10
 item_feature_dim = 1
@@ -21,8 +21,11 @@ item_feature_dim = 1
 # ユーザの特徴量
 user_features = torch.randn(num_users, user_feature_dim)
 
-# アイテムの特徴量(価格は1000円〜10000円までの一様分布)
-item_features = torch.randint(1000, 10000, (num_items, item_feature_dim)).float()
+# アイテムの価格 (アイテムの特徴量．4000〜20000の間でランダムに価格を設定)
+not_purchase = torch.zeros(1, item_feature_dim)
+item_features = torch.cat([not_purchase, torch.randint(4000, 20000, (num_items-1, item_feature_dim)).float()])
+
+
 
 print(user_features)
 print(item_features)
@@ -33,12 +36,15 @@ print(item_features)
 # ユーザとアイテムのエッジのリスト
 edges = []
 
-# ユーザが購入しない場合は6番目のアイテムにエッジを貼る（6=非購買），購入する場合は購入したアイテムにエッジを貼る
+# ユーザが購入しない場合(3で割り切れない場合)は，not_purchaseのインデックスとエッジを張る
 for i in range(num_users):
-    if i % 2 == 0:
-        edges.append([i, 6])
+    if i % 3 != 0:
+        edges.append([i, num_users])
     else:
-        edges.append([i, i+torch.randint(0, num_items, (1,)).item()])
+        # ユーザが購入する場合は，ランダムにアイテムを選ぶ
+        item_index = torch.randint(1, num_items, (1,)).item()
+        edges.append([i, num_users+item_index])
+
 
 
 # グラフデータを作成する
@@ -63,11 +69,10 @@ data = Data(x=x, edge_index=edge_index)
 
 # データの中身を確認する
 print(data)
+print(data.x)
+print(data.edge_index)
 
-# データを可視化する
-G = to_networkx(data)
-nx.draw(G, with_labels=True)
+g = to_networkx(data)
+nx.draw(g, with_labels=True)
 
 plt.show()
-
-
